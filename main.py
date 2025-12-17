@@ -80,15 +80,21 @@ if selected == "Gestão":
         """, unsafe_allow_html=True)
     with st.container():
         c1, c2 = st.columns(2)
-        with c1: f_obra = st.multiselect("Filtrar Obra", list_obras)
-        with c2: f_serv = st.multiselect("Filtrar Serviço", list_servs)
+        
+        opcoes_obras = sorted(list(set(list_obras + df_raw['OBRA'].unique().tolist()))) if not df_raw.empty else list_obras
+        opcoes_servs = sorted(list(set(list_servs + df_raw['AREA_SERVICO'].unique().tolist()))) if not df_raw.empty else list_servs
+        
+        with c1: f_obra = st.multiselect("Filtrar Obra", options=opcoes_obras)
+        with c2: f_serv = st.multiselect("Filtrar Serviço", options=opcoes_servs)
         st.markdown("---")
         
-        sel_obras = f_obra if f_obra else list_obras
-        sel_servs = f_serv if f_serv else list_servs
-        if not sel_servs and not df_raw.empty:
-             sel_servs = df_raw['AREA_SERVICO'].unique()
-        df_view = df_raw[(df_raw['OBRA'].isin(sel_obras)) & (df_raw['AREA_SERVICO'].isin(sel_servs))]
+        df_view = df_raw.copy()
+        
+        if f_obra:
+            df_view = df_view[df_view['OBRA'].isin(f_obra)]
+            
+        if f_serv:
+            df_view = df_view[df_view['AREA_SERVICO'].isin(f_serv)]
     
     dashboard.render_dashboard(df_raw, df_view, sheet_url)
 
