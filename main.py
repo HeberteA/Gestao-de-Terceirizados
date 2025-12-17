@@ -95,8 +95,8 @@ if selected == "Gestão":
         opcoes_obras_filtro = sorted(list(set(list_obras + df_raw['OBRA'].unique().tolist()))) if not df_raw.empty else list_obras
         opcoes_servs_filtro = sorted(list(set(list_servs + df_raw['AREA_SERVICO'].unique().tolist()))) if not df_raw.empty else list_servs
         
-        with c1: f_obra = st.multiselect("Filtrar Obra", options=opcoes_obras)
-        with c2: f_serv = st.multiselect("Filtrar Serviço", options=opcoes_servs)
+        with c1: f_obra = st.multiselect("Filtrar Obra", options=opcoes_obras_filtro)
+        with c2: f_serv = st.multiselect("Filtrar Serviço", options=opcoes_servs_filtro)
         st.markdown("---")
         
         df_view = df_raw.copy()
