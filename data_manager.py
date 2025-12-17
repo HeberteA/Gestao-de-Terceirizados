@@ -25,7 +25,12 @@ def get_data():
     sh = client.open_by_url(url)
     ws_aval = sh.worksheet("AVALIACOES")
     ws_obras = sh.worksheet("CADASTRO_OBRAS")
-    
+    try:
+        ws_servicos = sh.worksheet("CADASTRO_SERVICOS")
+        df_servicos = pd.DataFrame(ws_servicos.get_all_records())
+    except:
+        df_servicos = pd.DataFrame(columns=["SERVICO"])
+
     df_aval = pd.DataFrame(ws_aval.get_all_records())
     df_obras = pd.DataFrame(ws_obras.get_all_records())
     
@@ -35,8 +40,8 @@ def get_data():
         for c in cols:
             if c in df_aval.columns:
                 df_aval[c] = pd.to_numeric(df_aval[c], errors='coerce').fillna(0)
-    
-    return df_aval, df_obras, url
+
+    return df_aval, df_obras, df_servicos, url
 
 def save_data(df, sheet_name, url): 
     client = get_client()
