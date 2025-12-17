@@ -6,7 +6,7 @@ from data_manager import save_data
 
 
 @st.dialog("Editar Fornecedor")
-def edit_dialog(id_fornecedor, dados, lista_obras, lista_servicos):
+def edit_dialog(id_fornecedor, dados, lista_obras, lista_servicos, df_raw, sheet_url):
     if not isinstance(dados, dict):
         st.error("Erro interno: Os dados não chegaram corretamente.")
         return
@@ -74,14 +74,15 @@ def edit_dialog(id_fornecedor, dados, lista_obras, lista_servicos):
                     "OBSERVACOES": str(observacoes).upper().strip()
                 }
             for key, value in novos_dados.items():
-                df_raw.at[id_fornecedor, key] = value
-            
+                if key in df_raw.columns:
+                    df_raw.at[id_fornecedor, key] = value
             save_data(df_raw, "AVALIACOES", sheet_url)
+            
             st.success("Fornecedor atualizado com sucesso!")
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
-
-def render_dashboard(df_raw, df_view, sheet_url):
+        
+def render_dashboard(df_raw, df_view, sheet_url, lista_obras, lista_servicos):
     k1, k2, k3, k4 = st.columns(4)
     vencidos = len(df_view[df_view['STATUS'] == 'VENCIDO'])
     
