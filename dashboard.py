@@ -29,13 +29,25 @@ def edit_dialog(id_fornecedor, dados, lista_obras, lista_servicos):
 
         st.divider()
         c1, c2 = st.columns(2)
+        
+        atual_obra = str(dados.get("OBRA", "")).strip().upper()
+        atual_servico = str(dados.get("AREA_SERVICO", "")).strip().upper()
+        
+        try:
+            idx_obra = lista_obras.index(atual_obra)
+        except ValueError:
+            idx_obra = None 
+            
+        try:
+            idx_serv = lista_servicos.index(atual_servico)
+        except ValueError:
+            idx_serv = None
 
         with c1:
             data_avaliacao = st.date_input("Data", value=val_data)
             
-            obra = st.selectbox("Obra", options=lista_obras)
-            
-            area_servico = st.selectbox("Área", options=lista_servicos)
+            obra = st.selectbox("Obra", options=lista_obras, index=idx_obra)
+            area_servico = st.selectbox("Área", options=lista_servicos, index=idx_serv)
             
         with c2:
             fornecedor = st.text_input("Fornecedor", value=str(dados.get("FORNECEDOR", "")))
