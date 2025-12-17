@@ -84,7 +84,7 @@ def load_css():
         .nps-bar {{ height: 100%; border-radius: 3px; }}
 
         /* FOOTER */
-        .vc-footer {{ display: flex; justify-content: space-between; margin-top: 10px; pt: 8px; border-top: 1px solid #F5F5F5; font-size: 10px; color: #AAA; }}
+        .vc-footer {{ display: flex; justify-content: space-between; margin-top: 10px; pt: 8px; border-top: 5px solid #F5F5F5; margin-bottom: 15px; font-size: 10px; color: #AAA; }}
 
         /* GENERIC CARD CONTAINER */
         .generic-card {{
