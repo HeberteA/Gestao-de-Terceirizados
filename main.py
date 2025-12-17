@@ -164,7 +164,7 @@ elif selected == "Configuracoes":
             with col1:
                 data_avaliacao = st.date_input("Data da Avaliação")
             
-                obra = st.selectbox("Obra", options=lista_obras, index=None, placeholder="Selecione a obra...")
+                obra = st.selectbox("Obra", options=lista_obras_form, index=None, placeholder="Selecione a obra...")
             
                 area_servico = st.selectbox("Área de Serviço", options=LISTA_SERVICOS, index=None, placeholder="Selecione a área...")
             
