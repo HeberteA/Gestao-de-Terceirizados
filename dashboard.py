@@ -91,7 +91,7 @@ def render_dashboard(df_raw, df_view, sheet_url, lista_obras, lista_servicos):
     with k2: st.markdown(f"<div class='kpi-card'><div class='kpi-label'>VENCIDOS</div><div class='kpi-value' style='color:{'#C62828' if vencidos else TEXT_COLOR}'>{vencidos}</div></div>", unsafe_allow_html=True)
     with k3: st.markdown(f"<div class='kpi-card'><div class='kpi-label'>NPS MÉDIO</div><div class='kpi-value'>{df_view['NPS'].mean():.1f}</div></div>", unsafe_allow_html=True)
     with k4: st.markdown(f"<div class='kpi-card'><div class='kpi-label'>OBRAS</div><div class='kpi-value'>{df_view['OBRA'].nunique()}</div></div>", unsafe_allow_html=True)
-
+    st.markdown("---")
     if not df_view.empty:
         df_sorted = df_view.sort_values(by=['STATUS', 'NPS'], ascending=[False, False])
         
