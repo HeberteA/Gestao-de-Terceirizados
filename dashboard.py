@@ -99,8 +99,6 @@ def render_dashboard(df_raw, df_view, sheet_url, lista_obras, lista_servicos):
             with cols[i % 3]:
                 with st.container():
                     st.markdown(render_card_html(row), unsafe_allow_html=True)
-                
-                    st.markdown("<br>", unsafe_allow_html=True)
                     if st.button("Editar", key=f"bt_{index}", use_container_width=True):
                         edit_dialog(index, row.to_dict(), lista_obras, lista_servicos, df_raw, sheet_url)
                 
