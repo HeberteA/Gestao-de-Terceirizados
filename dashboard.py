@@ -33,9 +33,9 @@ def edit_dialog(id_fornecedor, dados, lista_obras, lista_servicos):
         with c1:
             data_avaliacao = st.date_input("Data", value=val_data)
             
-            obra = st.selectbox("Obra", options=lista_obras, index=idx_obra)
+            obra = st.selectbox("Obra", options=lista_obras)
             
-            area_servico = st.selectbox("Área", options=lista_servicos, index=idx_serv)
+            area_servico = st.selectbox("Área", options=lista_servicos)
             
         with c2:
             fornecedor = st.text_input("Fornecedor", value=str(dados.get("FORNECEDOR", "")))
