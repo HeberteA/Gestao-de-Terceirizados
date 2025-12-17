@@ -155,37 +155,39 @@ elif selected == "Configuracoes":
     with tab_fornec:
         st.markdown(f"<h4 style='color:{settings.TEXT_COLOR}'>Cadastrar Novo Fornecedor</h4>", unsafe_allow_html=True)
         
-        list_obras_form = sorted(df_obras_cad['OBRA'].astype(str).unique()) if not df_obras_cad.empty else []
-        list_servs_form = sorted(df_raw['AREA_SERVICO'].astype(str).unique()) if not df_raw.empty else ["Geral"]
+        if 'df_obras' in locals() or 'df_obras' in globals():
+            lista_obras = df_obras["OBRA"].unique().tolist() 
+        else:
+            lista_obras = ["OBRA TESTE 1", "OBRA TESTE 2"]
 
         with st.form("form_cadastro_padrao", clear_on_submit=True):
             col1, col2 = st.columns(2)
-        
+    
             with col1:
                 data_avaliacao = st.date_input("Data da Avaliação")
-            
-                obra = st.selectbox("Obra", options=lista_obras_form, index=None, placeholder="Selecione a obra...")
-            
+        
+                obra = st.selectbox("Obra", options=lista_obras, index=None, placeholder="Selecione a obra...")
+        
                 area_servico = st.selectbox("Área de Serviço", options=LISTA_SERVICOS, index=None, placeholder="Selecione a área...")
-            
+        
                 fornecedor = st.text_input("Fornecedor")
                 contato = st.text_input("Contato")
                 cidade = st.text_input("Cidade")
-            
+        
             with col2:
                 nota_preco = st.number_input("Nota Preço (0-5)", 0, 5, 0)
                 nota_prazo = st.number_input("Nota Prazo (0-5)", 0, 5, 0)
                 nota_qualidade = st.number_input("Nota Qualidade (0-5)", 0, 5, 0)
                 nota_agilidade = st.number_input("Nota Agilidade (0-5)", 0, 5, 0)
                 nps = st.number_input("NPS (0-10)", 0, 10, 0)
-            
+        
             observacoes = st.text_area("Observações")
-        
+    
             submitted = st.form_submit_button("Adicionar Fornecedor")
-        
+    
             if submitted:
                 if not obra or not area_servico or not fornecedor:
-                    st.error("Por favor, preencha a Obra, a Área de Serviço e o Fornecedor.")
+                    st.warning("Preencha Obra, Área e Fornecedor!")
                 else:
                     novo_registro = {
                         "DATA_AVALIACAO": data_avaliacao,
@@ -201,9 +203,8 @@ elif selected == "Configuracoes":
                         "NPS": nps,
                         "OBSERVACOES": str(observacoes).upper().strip() if observacoes else ""
                     }
-
-                    st.success(f"Fornecedor {novo_registro['FORNECEDOR']} cadastrado com sucesso!")
-                    st.rerun()
+            
+                    st.success("Salvo com sucesso!")
 
         st.markdown("---")
         
