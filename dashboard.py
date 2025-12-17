@@ -86,7 +86,7 @@ def render_dashboard(df_raw, df_view, sheet_url):
                 
                     st.markdown("<br>", unsafe_allow_html=True)
                     if st.button("Editar", key=f"bt_{index}", use_container_width=True):
-                        edit_dialog(index, row.to_dict(), opcoes_obras, opcoes_servicos)
+                        edit_dialog(index, row.to_dict(), lista_obras, lista_servicos)
                 
                 st.markdown('</div>', unsafe_allow_html=True)
     else:
