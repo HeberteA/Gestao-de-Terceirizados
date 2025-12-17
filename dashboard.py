@@ -42,12 +42,11 @@ def edit_dialog(id_fornecedor, dados, lista_obras, lista_servicos):
             idx_serv = lista_servicos.index(atual_servico)
         except ValueError:
             idx_serv = None
-
         with c1:
             data_avaliacao = st.date_input("Data", value=val_data)
             
-            obra = st.selectbox("Obra", options=lista_obras, index=idx_obra)
-            area_servico = st.selectbox("Área", options=lista_servicos, index=idx_serv)
+            obra = st.selectbox("Obra", options=lista_obras, index=idx_obra, placeholder="Selecione para padronizar...")
+            area_servico = st.selectbox("Área", options=lista_servicos, index=idx_serv, placeholder="Selecione para padronizar...")
             
         with c2:
             fornecedor = st.text_input("Fornecedor", value=str(dados.get("FORNECEDOR", "")))
@@ -58,11 +57,13 @@ def edit_dialog(id_fornecedor, dados, lista_obras, lista_servicos):
     
         st.markdown('<div class="save-btn">', unsafe_allow_html=True)
         if st.form_submit_button("Atualizar Dados", use_container_width=True):
+            val_obra = obra if obra else atual_obra
+            val_servico = area_servico if area_servico else atual_servico
             novos_dados = {
                     "DATA_AVALIACAO": data_avaliacao,
-                    "OBRA": str(obra).upper().strip(),
-                    "AREA_SERVICO": str(area_servico).upper().strip(),
-                    "FORNECEDOR": str(fornecedor).upper().strip(), 
+                    "OBRA": str(val_obra).upper().strip(),
+                    "AREA_SERVICO": str(val_servico).upper().strip(),
+                    "FORNECEDOR": str(fornecedor).upper().strip(),
                     "CONTATO": str(contato).upper().strip(),
                     "CIDADE": str(cidade).upper().strip(),
                     "NOTA_PRECO": n_prec,
@@ -72,8 +73,10 @@ def edit_dialog(id_fornecedor, dados, lista_obras, lista_servicos):
                     "NPS": nps_new,
                     "OBSERVACOES": str(observacoes).upper().strip()
                 }
-        
+            for key, value in novos_dados.items():
+                df_raw.at[id_fornecedor, key] = value
             
+            save_data(df_raw, "AVALIACOES", sheet_url)
             st.success("Fornecedor atualizado com sucesso!")
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
@@ -98,7 +101,7 @@ def render_dashboard(df_raw, df_view, sheet_url):
                 
                     st.markdown("<br>", unsafe_allow_html=True)
                     if st.button("Editar", key=f"bt_{index}", use_container_width=True):
-                        edit_dialog(index, row.to_dict(), lista_obras, lista_servicos)
+                        edit_dialog(index, row.to_dict(), lista_obras, lista_servicos, df_raw, sheet_url)
                 
                 st.markdown('</div>', unsafe_allow_html=True)
     else:
