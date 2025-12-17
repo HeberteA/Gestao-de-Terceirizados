@@ -108,8 +108,8 @@ if selected == "Gestão":
     dashboard.render_dashboard(df_raw, df_view, sheet_url, list_obras, list_servs)
 
 elif selected == "Configuracoes":
-    st.header("CONFIGURAÇÕES", divider="orange")
-    tab_obras, tab_servicos, tab_fornec = st.tabs(["OBRAS", "SERVIÇOS", "FORNECEDORES"])
+    st.header("Configurações", divider="orange")
+    tab_obras, tab_servicos, tab_fornec = st.tabs(["Obras", "Serviços", "Fornecedores"])
 
     with tab_obras:
         st.markdown(f"<h4 style='color:{settings.TEXT_COLOR}'>Adicionar Nova Obra</h4>", unsafe_allow_html=True)
