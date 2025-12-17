@@ -89,6 +89,13 @@ def render_dashboard(df_raw, df_view, sheet_url):
     with k3: st.markdown(f"<div class='kpi-card'><div class='kpi-label'>NPS MÉDIO</div><div class='kpi-value'>{df_view['NPS'].mean():.1f}</div></div>", unsafe_allow_html=True)
     with k4: st.markdown(f"<div class='kpi-card'><div class='kpi-label'>OBRAS</div><div class='kpi-value'>{df_view['OBRA'].nunique()}</div></div>", unsafe_allow_html=True)
 
+    if not df_raw.empty:
+        opcoes_obras = sorted(df_raw['OBRA'].astype(str).unique().tolist())
+        opcoes_servicos = sorted(df_raw['AREA_SERVICO'].astype(str).unique().tolist())
+    else:
+        opcoes_obras = []
+        opcoes_servicos = []
+
     if not df_view.empty:
         df_sorted = df_view.sort_values(by=['STATUS', 'NPS'], ascending=[False, False])
         
