@@ -9,6 +9,31 @@ import dashboard
 
 st.set_page_config(layout="wide", initial_sidebar_state="expanded", page_title="Qualificaçao de Terceirizados", page_icon="Lavie1.png")
 
+LISTA_SERVICOS = [
+    "ADMINISTRATIVO",
+    "ALVENARIA",
+    "CLIMATIZAÇÃO",
+    "AUTOMAÇÃO",
+    "CARPINTARIA",
+    "DRYWALL",
+    "ELÉTRICA",
+    "ESTRUTURA METÁLICA",
+    "FUNDAÇÃO",
+    "GÁS",
+    "GESSO",
+    "HIDRÁULICA",
+    "IMPERMEABILIZAÇÃO",
+    "LIMPEZA PÓS-OBRA",
+    "LOGÍSTICA/TRANSPORTE",
+    "MARMORARIA",
+    "MARCENARIA",
+    "PAISAGISMO",
+    "PAVIMENTAÇÃO",
+    "PINTURA",
+    "SERRALHERIA",
+    "VIDRAÇARIA"
+]
+
 st.markdown("""
 <style>
     .sidebar-logo-container {
@@ -32,52 +57,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-@st.dialog("Cadastrar Novo Fornecedor")
-def form_cadastro_fornecedor():
-    with st.form("form_novo_fornecedor", clear_on_submit=True):
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            data_avaliacao = st.date_input("Data da Avaliação")
-            obra = st.text_input("Obra")
-            area_servico = st.text_input("Área de Serviço")
-        with col2:
-            fornecedor = st.text_input("Fornecedor")
-            contato = st.text_input("Contato")
-            cidade = st.text_input("Cidade")
-            
-        cl1, cl2 = st.columns(2)
-        with cl1:
-            nota_preco = st.slider("Nota Preço (0-5)", min_value=0, max_value=5, step=1)
-            nota_prazo = st.slider("Nota Prazo (0-5)", min_value=0, max_value=5, step=1)
-        with cl2:
-            nota_qualidade = st.slider("Nota Qualidade (0-5)", min_value=0, max_value=5, step=1)
-            nota_agilidade = st.slider("Nota Agilidade (0-5)", min_value=0, max_value=5, step=1)
-            
-        nps = st.slider("NPS (0-10)", min_value=0, max_value=10, step=1)
-            
-        observacoes = st.text_area("Observações")
-        
-        submitted = st.form_submit_button("Salvar Fornecedor")
-        
-        if submitted:
-            novo_registro = {
-                "DATA_AVALIACAO": data_avaliacao,
-                "OBRA": obra,
-                "AREA_SERVICO": area_servico,
-                "FORNECEDOR": fornecedor,
-                "CONTATO": contato,
-                "CIDADE": cidade,
-                "NOTA_PRECO": nota_preco,
-                "NOTA_PRAZO": nota_prazo,
-                "NOTA_QUALIDADE": nota_qualidade,
-                "NOTA_AGILIDADE": nota_agilidade,
-                "NPS": nps,
-                "OBSERVACOES": observacoes
-            }
-            
-            st.success("Fornecedor cadastrado com sucesso!")
-            st.rerun()
 
 settings.load_css()
 
@@ -179,8 +158,52 @@ elif selected == "Configuracoes":
         list_obras_form = sorted(df_obras_cad['OBRA'].astype(str).unique()) if not df_obras_cad.empty else []
         list_servs_form = sorted(df_raw['AREA_SERVICO'].astype(str).unique()) if not df_raw.empty else ["Geral"]
 
-        if st.button("Adicionar Fornecedor", use_container_width=True):
-            form_cadastro_fornecedor()
+        with st.form("form_cadastro_padrao", clear_on_submit=True):
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            data_avaliacao = st.date_input("Data da Avaliação")
+            
+            obra = st.selectbox("Obra", options=lista_obras, index=None, placeholder="Selecione a obra...")
+            
+            area_servico = st.selectbox("Área de Serviço", options=LISTA_SERVICOS, index=None, placeholder="Selecione a área...")
+            
+            fornecedor = st.text_input("Fornecedor")
+            contato = st.text_input("Contato")
+            cidade = st.text_input("Cidade")
+            
+        with col2:
+            nota_preco = st.number_input("Nota Preço (0-5)", 0, 5, 0)
+            nota_prazo = st.number_input("Nota Prazo (0-5)", 0, 5, 0)
+            nota_qualidade = st.number_input("Nota Qualidade (0-5)", 0, 5, 0)
+            nota_agilidade = st.number_input("Nota Agilidade (0-5)", 0, 5, 0)
+            nps = st.number_input("NPS (0-10)", 0, 10, 0)
+            
+        observacoes = st.text_area("Observações")
+        
+        submitted = st.form_submit_button("Adicionar Fornecedor")
+        
+        if submitted:
+            if not obra or not area_servico or not fornecedor:
+                st.error("Por favor, preencha a Obra, a Área de Serviço e o Fornecedor.")
+            else:
+                novo_registro = {
+                    "DATA_AVALIACAO": data_avaliacao,
+                    "OBRA": str(obra).upper().strip(),           
+                    "AREA_SERVICO": str(area_servico).upper().strip(), 
+                    "FORNECEDOR": str(fornecedor).upper().strip(),
+                    "CONTATO": str(contato).upper().strip(),
+                    "CIDADE": str(cidade).upper().strip(),
+                    "NOTA_PRECO": nota_preco,
+                    "NOTA_PRAZO": nota_prazo,
+                    "NOTA_QUALIDADE": nota_qualidade,
+                    "NOTA_AGILIDADE": nota_agilidade,
+                    "NPS": nps,
+                    "OBSERVACOES": str(observacoes).upper().strip() if observacoes else ""
+                }
+
+                st.success(f"Fornecedor {novo_registro['FORNECEDOR']} cadastrado com sucesso!")
+                st.rerun()
 
         st.markdown("---")
         
