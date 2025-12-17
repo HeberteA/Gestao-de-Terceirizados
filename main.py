@@ -14,7 +14,8 @@ st.markdown("""
     .sidebar-logo-container {
         text-align: center;
         padding: 20px 0;
-        margin-bottom: 2px;
+        margin-top: 15px;
+        margin-bottom: 0px;
     }
     .sidebar-logo-text {
         font-family: 'Inter', sans-serif;
