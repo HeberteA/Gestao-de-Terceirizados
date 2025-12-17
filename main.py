@@ -108,7 +108,7 @@ if selected == "Gestão":
     dashboard.render_dashboard(df_raw, df_view, sheet_url, list_obras, list_servs)
 
 elif selected == "Configuracoes":
-    st.header("Configurações", divider="orange")
+    st.header("# Configurações", divider="orange")
     tab_obras, tab_servicos, tab_fornec = st.tabs(["OBRAS", "SERVIÇOS", "FORNECEDORES"])
 
     with tab_obras:
@@ -177,12 +177,12 @@ elif selected == "Configuracoes":
         with st.form("form_cadastro_padrao", clear_on_submit=True):
             
             c1, c2, c3 = st.columns(3)
-            with c1: data_avaliacao = st.date_input("Data da Avaliação")
+            with c1: fornecedor = st.text_input("Nome do Fornecedor")
             with c2: obra = st.selectbox("Obra", options=list_obras, index=None, placeholder="Selecione a obra...")
             with c3: area_servico = st.selectbox("Área de Serviço", options=list_servs, index=None, placeholder="Selecione a área...")
             
             c4, c5, c6 = st.columns(3)
-            with c4: fornecedor = st.text_input("Nome do Fornecedor")
+            with c4: data_avaliacao = st.date_input("Data da Avaliação")
             with c5: contato = st.text_input("Contato / Telefone")
             with c6: cidade = st.text_input("Cidade")
 
