@@ -29,20 +29,6 @@ def edit_dialog(id_fornecedor, dados, lista_obras, lista_servicos):
 
         st.divider()
         c1, c2 = st.columns(2)
-        
-        atual_obra = str(dados.get("OBRA", "")).strip().upper()
-        atual_servico = str(dados.get("AREA_SERVICO", "")).strip().upper()
-        
-        if atual_obra and atual_obra not in lista_obras:
-            lista_obras.append(atual_obra)
-            lista_obras.sort()
-            
-        if atual_servico and atual_servico not in lista_servicos:
-            lista_servicos.append(atual_servico)
-            lista_servicos.sort()
-            
-        idx_obra = lista_obras.index(atual_obra) if atual_obra in lista_obras else None
-        idx_serv = lista_servicos.index(atual_servico) if atual_servico in lista_servicos else None
 
         with c1:
             data_avaliacao = st.date_input("Data", value=val_data)
