@@ -89,6 +89,7 @@ if selected == "Gestão":
                 <div class="sidebar-logo-text">GESTÃO DE TERCEIROS</div>
             </div>
         """, unsafe_allow_html=True)
+    st.header("", divider="orange")
     with st.container():
         c1, c2 = st.columns(2)
         
@@ -107,7 +108,12 @@ if selected == "Gestão":
     dashboard.render_dashboard(df_raw, df_view, sheet_url, list_obras, list_servs)
 
 elif selected == "Configuracoes":
-    st.header("Configurações", divider="orange")
+    st.markdown("""
+            <div class="sidebar-logo-container">
+                <div class="sidebar-logo-text">CONFIGURAÇÕES</div>
+            </div>
+        """, unsafe_allow_html=True)
+    st.header("", divider="orange")
     tab_obras, tab_servicos, tab_fornec = st.tabs(["Obras", "Serviços", "Fornecedores"])
 
     with tab_obras:
