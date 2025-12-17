@@ -135,7 +135,7 @@ elif selected == "Configuracoes":
                         st.warning("Digite o nome da obra.")
 
         st.markdown("---")
-        st.markdown(f"<h5 style='color:#888; margin-bottom: 20px;'>OBRAS ATIVAS ({len(df_obras_cad)})</h5>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='color:#888; margin-bottom: 20px;'>Obras Ativas ({len(df_obras_cad)})</h5>", unsafe_allow_html=True)
 
         if not df_obras_cad.empty:
             cols = st.columns(4)
@@ -165,7 +165,7 @@ elif selected == "Configuracoes":
                         st.rerun()
 
         st.markdown("---")
-        st.markdown(f"<h5 style='color:#888;'>SERVIÇOS CADASTRADOS ({len(df_servicos_cad)})</h5>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='color:#888;'>Serviços Cadastrados ({len(df_servicos_cad)})</h5>", unsafe_allow_html=True)
         if not df_servicos_cad.empty:
             st.dataframe(df_servicos_cad, use_container_width=True, hide_index=True)
         else:
@@ -230,7 +230,7 @@ elif selected == "Configuracoes":
         
         df_unique_vendors = df_raw.drop_duplicates(subset=['FORNECEDOR'])
         
-        st.markdown(f"<h5 style='color:#888; margin-bottom: 20px;'>CATÁLOGO DE PARCEIROS ({len(df_unique_vendors)})</h5>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='color:#888; margin-bottom: 20px;'>Catálogo de Parceiros ({len(df_unique_vendors)})</h5>", unsafe_allow_html=True)
         
         if not df_unique_vendors.empty:
             cols = st.columns(3)
