@@ -96,7 +96,7 @@ if selected == "Gestão":
         if f_serv:
             df_view = df_view[df_view['AREA_SERVICO'].isin(f_serv)]
     
-    dashboard.render_dashboard(df_raw, df_view, sheet_url, df_obras, df_servicos)
+    dashboard.render_dashboard(df_raw, df_view, sheet_url, list_obras, list_servs)
 
 elif selected == "Configuracoes":
     tab_obras, tab_servicos, tab_fornec = st.tabs(["OBRAS", "SERVIÇOS", "FORNECEDORES"])
