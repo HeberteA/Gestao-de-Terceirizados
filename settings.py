@@ -187,6 +187,8 @@ def render_card_html(row):
             <span>{contact}</span>
         </div>
 
+        {obs_html}
+
         <div class="nps-box">
             <div class="nps-head">
                 <span>NPS</span>
