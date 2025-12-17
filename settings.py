@@ -59,6 +59,18 @@ def load_css():
         .badge-ok {{ font-size: 9px; padding: 3px 6px; border-radius: 4px; font-weight: 700; text-transform: uppercase; background:rgba(232, 245, 233, 0.1); color: #2E7D32; border:1px solid rgba(46, 125, 50,0.3);}}
         .badge-bad {{ font-size: 9px; padding: 3px 6px; border-radius: 4px; font-weight: 700; text-transform: uppercase; background:rgba(255, 235, 238, 0.1); color: #C62828; border:1px solid rgba(198, 40, 40, 0.3);}}
 
+        .vc-obs {{ 
+            font-size: 10px; 
+            color: #999; 
+            font-style: italic; 
+            background: rgba(255,255,255,0.05); 
+            padding: 6px; 
+            border-radius: 4px; 
+            margin-top: 10px; 
+            border-left: 2px solid #555;
+            line-height: 1.2;
+        }}
+        
         /* BARS */
         .metric-row {{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 11px; color: #BEBEBE; }}
         .bar-wrapper {{ display: flex; gap: 3px; }}
@@ -147,7 +159,13 @@ def render_card_html(row):
     nps_val = int(row['NPS'])
     nps_pct = min(nps_val * 10, 100)
     nps_c = "#2E7D32" if nps_val >= 9 else "#F9A825" if nps_val >= 7 else "#C62828"
-
+    obs_text = str(row.get('OBSERVACOES', '')).strip()
+    if obs_text and obs_text.lower() != "nan":
+        display_obs = (obs_text[:80] + '...') if len(obs_text) > 80 else obs_text
+        obs_html = f'<div class="vc-obs">"{display_obs}"</div>'
+    else:
+        obs_html = "" 
+        
     return f"""
         <div class="vc-header">
             <div>
