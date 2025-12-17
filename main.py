@@ -175,23 +175,28 @@ elif selected == "Configuracoes":
         st.markdown(f"<h4 style='color:{settings.TEXT_COLOR}'>Cadastrar Novo Fornecedor</h4>", unsafe_allow_html=True)
 
         with st.form("form_cadastro_padrao", clear_on_submit=True):
-            col1, col2 = st.columns(2)
-            with col1:
-                data_avaliacao = st.date_input("Data da Avaliação")
-                obra = st.selectbox("Obra", options=list_obras, index=None, placeholder="Selecione a obra...")
-                area_servico = st.selectbox("Área de Serviço", options=list_servs, index=None, placeholder="Selecione a área...")
-                fornecedor = st.text_input("Fornecedor")
-                contato = st.text_input("Contato")
-                cidade = st.text_input("Cidade")
+            
+            c1, c2, c3 = st.columns(3)
+            with c1: data_avaliacao = st.date_input("Data da Avaliação")
+            with c2: obra = st.selectbox("Obra", options=list_obras, index=None, placeholder="Selecione a obra...")
+            with c3: area_servico = st.selectbox("Área de Serviço", options=list_servs, index=None, placeholder="Selecione a área...")
+            
+            c4, c5, c6 = st.columns(3)
+            with c4: fornecedor = st.text_input("Nome do Fornecedor")
+            with c5: contato = st.text_input("Contato / Telefone")
+            with c6: cidade = st.text_input("Cidade")
+
+            st.markdown("---")
+            st.markdown("<span style='font-size:0.8rem; color:#888'>CRITÉRIOS DE AVALIAÇÃO</span>", unsafe_allow_html=True)
+
+            n1, n2, n3, n4, n5 = st.columns(5)
+            with n1: nota_qualidade = st.number_input("Qualidade (0-5)", 0, 5, 0)
+            with n2: nota_prazo = st.number_input("Prazo (0-5)", 0, 5, 0)
+            with n3: nota_preco = st.number_input("Preço (0-5)", 0, 5, 0)
+            with n4: nota_agilidade = st.number_input("Agilidade (0-5)", 0, 5, 0)
+            with n5: nps = st.number_input("NPS (0-10)", 0, 10, 0)
         
-            with col2:
-                nota_preco = st.slider("Nota Preço (0-5)", 0, 5, 0)
-                nota_prazo = st.slider("Nota Prazo (0-5)", 0, 5, 0)
-                nota_qualidade = st.slider("Nota Qualidade (0-5)", 0, 5, 0)
-                nota_agilidade = st.slider("Nota Agilidade (0-5)", 0, 5, 0)
-                nps = st.slider("NPS (0-10)", 0, 10, 0)
-        
-            observacoes = st.text_area("Observações")
+            observacoes = st.text_area("Observações Gerais", height=80) 
     
             submitted = st.form_submit_button("Adicionar Fornecedor")
     
