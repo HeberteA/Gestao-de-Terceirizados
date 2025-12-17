@@ -108,7 +108,7 @@ if selected == "Gestão":
     dashboard.render_dashboard(df_raw, df_view, sheet_url, list_obras, list_servs)
 
 elif selected == "Configuracoes":
-    st.header("Configurações", divider="orange")
+    st.header("CONFIGURAÇÕES", divider="orange")
     tab_obras, tab_servicos, tab_fornec = st.tabs(["OBRAS", "SERVIÇOS", "FORNECEDORES"])
 
     with tab_obras:
