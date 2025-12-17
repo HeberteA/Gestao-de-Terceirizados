@@ -35,7 +35,11 @@ st.markdown("""
 
 settings.load_css()
 
-df_raw, df_obras_cad, df_servicos_cad, sheet_url = data_manager.get_data()
+try:
+    df_raw, df_obras_cad, df_servicos_cad, sheet_url = data_manager.get_data()
+except ValueError:
+    st.error("Erro nos dados: Verifique se o arquivo data_manager.py foi atualizado para retornar 4 valores.")
+    st.stop()
 
 hoje = date.today()
 df_raw['DIAS'] = df_raw['DATA_AVALIACAO'].apply(lambda x: (hoje - x).days if pd.notna(x) else 999)
@@ -69,8 +73,15 @@ with st.sidebar:
         }
     )
 
-list_obras = sorted(df_obras_cad['OBRA'].astype(str).unique()) if not df_obras_cad.empty else []
-list_servs = sorted(df_servicos_cad['SERVICO'].astype(str).unique()) if not df_servicos_cad.empty else []
+if not df_obras_cad.empty:
+    list_obras = sorted(df_obras_cad['OBRA'].astype(str).unique())
+else:
+    list_obras = []
+
+if not df_servicos_cad.empty:
+    list_servs = sorted(df_servicos_cad['SERVICO'].astype(str).unique())
+else:
+    list_servs = [][]
 
 if selected == "Gestão":
     st.markdown("""
@@ -81,18 +92,16 @@ if selected == "Gestão":
     with st.container():
         c1, c2 = st.columns(2)
         
-        opcoes_obras = sorted(list(set(list_obras + df_raw['OBRA'].unique().tolist()))) if not df_raw.empty else list_obras
-        opcoes_servs = sorted(list(set(list_servs + df_raw['AREA_SERVICO'].unique().tolist()))) if not df_raw.empty else list_servs
+        opcoes_obras_filtro = sorted(list(set(list_obras + df_raw['OBRA'].unique().tolist()))) if not df_raw.empty else list_obras
+        opcoes_servs_filtro = sorted(list(set(list_servs + df_raw['AREA_SERVICO'].unique().tolist()))) if not df_raw.empty else list_servs
         
         with c1: f_obra = st.multiselect("Filtrar Obra", options=opcoes_obras)
         with c2: f_serv = st.multiselect("Filtrar Serviço", options=opcoes_servs)
         st.markdown("---")
         
         df_view = df_raw.copy()
-        
         if f_obra:
             df_view = df_view[df_view['OBRA'].isin(f_obra)]
-            
         if f_serv:
             df_view = df_view[df_view['AREA_SERVICO'].isin(f_serv)]
     
