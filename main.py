@@ -81,7 +81,7 @@ else:
 if not df_servicos_cad.empty:
     list_servs = sorted(df_servicos_cad['SERVICO'].astype(str).unique())
 else:
-    list_servs = [][]
+    list_servs = []
 
 if selected == "Gestão":
     st.markdown("""
