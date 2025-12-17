@@ -9,31 +9,6 @@ import dashboard
 
 st.set_page_config(layout="wide", initial_sidebar_state="expanded", page_title="Qualificaçao de Terceirizados", page_icon="Lavie1.png")
 
-LISTA_SERVICOS = [
-    "ADMINISTRATIVO",
-    "ALVENARIA",
-    "CLIMATIZAÇÃO",
-    "AUTOMAÇÃO",
-    "CARPINTARIA",
-    "DRYWALL",
-    "ELÉTRICA",
-    "ESTRUTURA METÁLICA",
-    "FUNDAÇÃO",
-    "GÁS",
-    "GESSO",
-    "HIDRÁULICA",
-    "IMPERMEABILIZAÇÃO",
-    "LIMPEZA PÓS-OBRA",
-    "LOGÍSTICA/TRANSPORTE",
-    "MARMORARIA",
-    "MARCENARIA",
-    "PAISAGISMO",
-    "PAVIMENTAÇÃO",
-    "PINTURA",
-    "SERRALHERIA",
-    "VIDRAÇARIA"
-]
-
 st.markdown("""
 <style>
     .sidebar-logo-container {
@@ -60,7 +35,7 @@ st.markdown("""
 
 settings.load_css()
 
-df_raw, df_obras_cad, sheet_url = data_manager.get_data()
+df_raw, df_obras_cad, df_servicos_cad, sheet_url = data_manager.get_data()
 
 hoje = date.today()
 df_raw['DIAS'] = df_raw['DATA_AVALIACAO'].apply(lambda x: (hoje - x).days if pd.notna(x) else 999)
@@ -95,7 +70,7 @@ with st.sidebar:
     )
 
 list_obras = sorted(df_obras_cad['OBRA'].astype(str).unique()) if not df_obras_cad.empty else []
-list_servs = sorted(df_raw['AREA_SERVICO'].astype(str).unique()) if not df_raw.empty else []
+list_servs = sorted(df_servicos_cad['SERVICO'].astype(str).unique()) if not df_servicos_cad.empty else []
 
 if selected == "Gestão":
     st.markdown("""
@@ -111,12 +86,14 @@ if selected == "Gestão":
         
         sel_obras = f_obra if f_obra else list_obras
         sel_servs = f_serv if f_serv else list_servs
+        if not sel_servs and not df_raw.empty:
+             sel_servs = df_raw['AREA_SERVICO'].unique()
         df_view = df_raw[(df_raw['OBRA'].isin(sel_obras)) & (df_raw['AREA_SERVICO'].isin(sel_servs))]
     
     dashboard.render_dashboard(df_raw, df_view, sheet_url)
 
 elif selected == "Configuracoes":
-    tab_obras, tab_fornec = st.tabs(["GESTÃO DE OBRAS", "GESTÃO DE TERCEIRIZADOS"])
+    tab_obras, tab_servicos, tab_fornec = st.tabs(["OBRAS", "SERVIÇOS", "FORNECEDORES"])
 
     with tab_obras:
         st.markdown(f"<h4 style='color:{settings.TEXT_COLOR}'>Adicionar Nova Obra</h4>", unsafe_allow_html=True)
@@ -152,34 +129,51 @@ elif selected == "Configuracoes":
         else:
             st.info("Nenhuma obra cadastrada.")
 
+    with tab_servicos:
+        st.markdown(f"<h4 style='color:{settings.TEXT_COLOR}'>Adicionar Novo Serviço</h4>", unsafe_allow_html=True)
+        with st.container():
+            with st.form("form_servico", clear_on_submit=True):
+                c1, c2 = st.columns([3, 1])
+                with c1: new_serv = st.text_input("Nome do Serviço")
+                with c2: 
+                    st.markdown('<div class="primary-btn">', unsafe_allow_html=True)
+                    btn_save_serv = st.form_submit_button("CADASTRAR", use_container_width=True)
+                    st.markdown('</div>', unsafe_allow_html=True)
+                
+                if btn_save_serv:
+                    if new_serv:
+                        row = pd.DataFrame([{"SERVICO": new_serv.upper().strip()}])
+                        df_new_serv = pd.concat([df_servicos_cad, row], ignore_index=True).drop_duplicates()
+                        data_manager.save_data(df_new_serv, "CADASTRO_SERVICOS", sheet_url)
+                        st.success(f"Serviço {new_serv} adicionado!")
+                        st.rerun()
+
+        st.markdown("---")
+        st.markdown(f"<h5 style='color:#888;'>SERVIÇOS CADASTRADOS ({len(df_servicos_cad)})</h5>", unsafe_allow_html=True)
+        if not df_servicos_cad.empty:
+            st.dataframe(df_servicos_cad, use_container_width=True, hide_index=True)
+        else:
+            st.info("Nenhum serviço cadastrado na aba CADASTRO_SERVICOS.")
+
     with tab_fornec:
         st.markdown(f"<h4 style='color:{settings.TEXT_COLOR}'>Cadastrar Novo Fornecedor</h4>", unsafe_allow_html=True)
-        
-        if 'df_obras' in locals() or 'df_obras' in globals():
-            lista_obras = df_obras["OBRA"].unique().tolist() 
-        else:
-            lista_obras = ["OBRA TESTE 1", "OBRA TESTE 2"]
 
         with st.form("form_cadastro_padrao", clear_on_submit=True):
             col1, col2 = st.columns(2)
-    
             with col1:
                 data_avaliacao = st.date_input("Data da Avaliação")
-        
-                obra = st.selectbox("Obra", options=lista_obras, index=None, placeholder="Selecione a obra...")
-        
-                area_servico = st.selectbox("Área de Serviço", options=LISTA_SERVICOS, index=None, placeholder="Selecione a área...")
-        
+                obra = st.selectbox("Obra", options=list_obras, index=None, placeholder="Selecione a obra...")
+                area_servico = st.selectbox("Área de Serviço", options=list_servs, index=None, placeholder="Selecione a área...")
                 fornecedor = st.text_input("Fornecedor")
                 contato = st.text_input("Contato")
                 cidade = st.text_input("Cidade")
         
             with col2:
-                nota_preco = st.number_input("Nota Preço (0-5)", 0, 5, 0)
-                nota_prazo = st.number_input("Nota Prazo (0-5)", 0, 5, 0)
-                nota_qualidade = st.number_input("Nota Qualidade (0-5)", 0, 5, 0)
-                nota_agilidade = st.number_input("Nota Agilidade (0-5)", 0, 5, 0)
-                nps = st.number_input("NPS (0-10)", 0, 10, 0)
+                nota_preco = st.slider("Nota Preço (0-5)", 0, 5, 0)
+                nota_prazo = st.slider("Nota Prazo (0-5)", 0, 5, 0)
+                nota_qualidade = st.slider("Nota Qualidade (0-5)", 0, 5, 0)
+                nota_agilidade = st.slider("Nota Agilidade (0-5)", 0, 5, 0)
+                nps = st.slider("NPS (0-10)", 0, 10, 0)
         
             observacoes = st.text_area("Observações")
     
@@ -204,7 +198,12 @@ elif selected == "Configuracoes":
                         "OBSERVACOES": str(observacoes).upper().strip() if observacoes else ""
                     }
             
+                    row_add = pd.DataFrame([novo_registro])
+                    df_final = pd.concat([df_raw, row_add], ignore_index=True)
+                    data_manager.save_data(df_final, "AVALIACOES", sheet_url)
+                    
                     st.success("Salvo com sucesso!")
+                    st.rerun()
 
         st.markdown("---")
         
