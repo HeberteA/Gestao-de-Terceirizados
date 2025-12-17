@@ -83,7 +83,7 @@ def edit_dialog(id_fornecedor, dados, lista_obras, lista_servicos, df_raw, sheet
         st.markdown('</div>', unsafe_allow_html=True)
         
 def render_dashboard(df_raw, df_view, sheet_url, lista_obras, lista_servicos):
-    st.link_button("Adicionar Fornecedor", "https://gestao-de-terceirizados-lavie.streamlit.app/#cadastrar-novo-fornecedor", use_container_width=True) 
+    st.link_button("Adicionar Fornecedor", "https://gestao-de-terceirizados-lavie.streamlit.app/#cadastrar-novo-fornecedor", key=f"bt_{index}", use_container_width=True) 
     st.markdown("---")
     k1, k2, k3, k4 = st.columns(4)
     vencidos = len(df_view[df_view['STATUS'] == 'VENCIDO'])
