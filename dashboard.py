@@ -6,10 +6,11 @@ from data_manager import save_data
 
 
 @st.dialog("Editar Fornecedor")
-def edit_dialog(id_fornecedor, dados):
+def edit_dialog(id_fornecedor, dados, lista_obras, lista_servicos):
     if not isinstance(dados, dict):
         st.error("Erro interno: Os dados não chegaram corretamente.")
         return
+        
     with st.form("form_editar_completo"):
 
         try:
@@ -28,34 +29,53 @@ def edit_dialog(id_fornecedor, dados):
 
         st.divider()
         c1, c2 = st.columns(2)
+        
+        atual_obra = str(dados.get("OBRA", "")).strip().upper()
+        atual_servico = str(dados.get("AREA_SERVICO", "")).strip().upper()
+        
+        if atual_obra and atual_obra not in lista_obras:
+            lista_obras.append(atual_obra)
+            lista_obras.sort()
+            
+        if atual_servico and atual_servico not in lista_servicos:
+            lista_servicos.append(atual_servico)
+            lista_servicos.sort()
+            
+        idx_obra = lista_obras.index(atual_obra) if atual_obra in lista_obras else None
+        idx_serv = lista_servicos.index(atual_servico) if atual_servico in lista_servicos else None
+
         with c1:
             data_avaliacao = st.date_input("Data", value=val_data)
-            obra = st.text_input("Obra", value=str(dados.get("OBRA", "")))
-            area_servico = st.text_input("Área", value=str(dados.get("AREA_SERVICO", "")))
+            
+            obra = st.selectbox("Obra", options=lista_obras, index=idx_obra)
+            
+            area_servico = st.selectbox("Área", options=lista_servicos, index=idx_serv)
+            
         with c2:
             fornecedor = st.text_input("Fornecedor", value=str(dados.get("FORNECEDOR", "")))
             contato = st.text_input("Contato", value=str(dados.get("CONTATO", "")))
             cidade = st.text_input("Cidade", value=str(dados.get("CIDADE", "")))
+            
         observacoes = st.text_area("Observações", value=str(dados.get("OBSERVACOES", "")))
-    
     
         st.markdown('<div class="save-btn">', unsafe_allow_html=True)
         if st.form_submit_button("Atualizar Dados", use_container_width=True):
             novos_dados = {
                     "DATA_AVALIACAO": data_avaliacao,
-                    "OBRA": obra,
-                    "AREA_SERVICO": area_servico,
-                    "FORNECEDOR": fornecedor,
-                    "CONTATO": contato,
-                    "CIDADE": cidade,
+                    "OBRA": str(obra).upper().strip(),
+                    "AREA_SERVICO": str(area_servico).upper().strip(),
+                    "FORNECEDOR": str(fornecedor).upper().strip(), 
+                    "CONTATO": str(contato).upper().strip(),
+                    "CIDADE": str(cidade).upper().strip(),
                     "NOTA_PRECO": n_prec,
                     "NOTA_PRAZO": n_praz,
                     "NOTA_QUALIDADE": n_qual,
                     "NOTA_AGILIDADE": n_agil,
                     "NPS": nps_new,
-                    "OBSERVACOES": observacoes
+                    "OBSERVACOES": str(observacoes).upper().strip()
                 }
         
+            
             st.success("Fornecedor atualizado com sucesso!")
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
@@ -80,7 +100,7 @@ def render_dashboard(df_raw, df_view, sheet_url):
                 
                     st.markdown("<br>", unsafe_allow_html=True)
                     if st.button("Editar", key=f"bt_{index}", use_container_width=True):
-                        edit_dialog(index, row.to_dict())
+                        edit_dialog(index, row.to_dict(), opcoes_obras, opcoes_servicos)
                 
                 st.markdown('</div>', unsafe_allow_html=True)
     else:
