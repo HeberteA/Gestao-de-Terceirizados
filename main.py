@@ -97,6 +97,7 @@ if selected == "Gestão":
         
         with c1: f_obra = st.multiselect("Filtrar Obra", options=opcoes_obras_filtro)
         with c2: f_serv = st.multiselect("Filtrar Serviço", options=opcoes_servs_filtro)
+        st.link_button("Adicionar Fornecedor", "https://gestao-de-terceirizados-lavie.streamlit.app/#cadastrar-novo-fornecedor", use_container_widht=True) 
         st.markdown("---")
         
         df_view = df_raw.copy()
