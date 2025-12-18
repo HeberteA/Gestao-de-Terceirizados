@@ -48,7 +48,6 @@ df_raw['STATUS'] = df_raw['DIAS'].apply(lambda x: "VENCIDO" if x > 90 else "EM D
 
 with st.sidebar:
     st.image("Lavie.png")
-    st.divider()
     st.markdown("""
             <div class="sidebar-logo-container">
                 <div class="sidebar-logo-text">QUALIFICAÇÃO</div>
