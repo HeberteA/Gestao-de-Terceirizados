@@ -9,7 +9,7 @@ CARD_BG = "#FFFFFF"
 def load_css():
     st.markdown(f"""
         <style>
-        .stApp {{ background: radial-gradient(circle at 10% 20%, #3b3b3b 0%, #000000 100%); font-family: 'Inter', sans-serif; color: #ffffff;}}
+        .stApp {{background: radial-gradient(circle at 10% 20%, #1e1e24 0%, #050505 90%);background-attachment: fixed;}}
         .block-container {{ padding-top: 1.5rem; }}
         section[data-testid="stSidebar"] {{ background-color: #000000; border-right: 1px solid rgba(255,255,255,0.1);}}
         
